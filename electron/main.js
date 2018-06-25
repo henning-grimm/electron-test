@@ -15,7 +15,7 @@ const {autoUpdater} = require("electron-updater");
 //-------------------------------------------------------------------
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
-log.info('App starting...');
+log.info('App starting... for real');
 
 //-------------------------------------------------------------------
 // Define the menu
@@ -68,15 +68,19 @@ function createDefaultWindow() {
   return win;
 }
 autoUpdater.on('checking-for-update', () => {
+  log.info("Checking for update...");
   sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
+  log.info("Update available.");
   sendStatusToWindow('Update available.');
 })
 autoUpdater.on('update-not-available', (info) => {
+  log.info("Update not available.");
   sendStatusToWindow('Update not available.');
 })
 autoUpdater.on('error', (err) => {
+  log.info('Error in auto-updater. ' + err);
   sendStatusToWindow('Error in auto-updater. ' + err);
 })
 autoUpdater.on('download-progress', (progressObj) => {
@@ -92,6 +96,9 @@ app.on('ready', function() {
   // Create the Menu
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
+
+  log.info('app is ready');
+  autoUpdater.checkForUpdatesAndNotify();
 
   createDefaultWindow();
 });
@@ -109,9 +116,6 @@ app.on('window-all-closed', () => {
 // This will immediately download an update, then install when the
 // app quits.
 //-------------------------------------------------------------------
-app.on('ready', function()  {
-  autoUpdater.checkForUpdatesAndNotify();
-});
 
 //-------------------------------------------------------------------
 // Auto updates - Option 2 - More control
